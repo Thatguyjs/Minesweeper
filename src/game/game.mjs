@@ -60,8 +60,11 @@ const Game = {
 	init(canvas, context, options) {
 		this.canvas = canvas;
 		this.context = context;
+		this.reset(options);
+	},
 
-		this.difficulty = options?.difficulty ?? Difficulty.Easy;
+	reset(options) {
+		this.difficulty = options?.difficulty ?? Difficulty.Medium;
 		this.board = new GameBoard(this.canvas, ...Difficulty.board_size(this.difficulty));
 		this.resize_canvas();
 
@@ -87,13 +90,19 @@ const Game = {
 
 	event_callback(event) {
 		if(event === GameEvent.Lose) {
-			console.log("player lost!");
+			this.dispatch('lose');
 			this.state = GameState.Lose;
 		}
 		else {
-			console.log("player won!");
+			this.dispatch('win');
 			this.state = GameState.Win;
 		}
+	},
+
+	dispatch(event_name, event_data=null) {
+		window.dispatchEvent(new CustomEvent(`game:${event_name}`, {
+			detail: event_data
+		}));
 	},
 
 	render() {

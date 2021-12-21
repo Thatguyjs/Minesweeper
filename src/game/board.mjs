@@ -157,8 +157,10 @@ class GameBoard {
 				if(search_tile.state === TileState.Visible)
 					continue;
 
-				if(search_tile.state === TileState.Flagged)
+				if(search_tile.state === TileState.Flagged) {
 					search_tile.flag();
+					this.#tiles_flagged--;
+				}
 				if(search_tile.reveal())
 					this.#tiles_visible++;
 

@@ -10,18 +10,43 @@
 		<div class="section" id="left-section">
 			<header>
 				<h1>Minesweeper</h1>
-				<a href="https://github.com/Thatguyjs/Minesweeper" target="_blank" rel="noreferrer">View Code</a>
+				<span>v.0.1.0<span>
 			</header>
 
-			<div id="timer">
-				<span></span>
+			<div id="options">
+				<!-- <h2>Options</h2> -->
+
+				<div>
+					<h3>Difficulty</h3>
+					<select id="option:difficulty">
+						<option value="easy">Easy</option>
+						<option value="medium">Medium</option>
+						<option value="hard">Hard</option>
+					</select>
+					<span>
+						<span id="display:difficulty-rows">0</span> rows,
+						<span id="display:difficulty-cols">0</span> columns,
+						<span id="display:difficulty-mines">0</span> mines
+					</span>
+				</div>
+
+				<div>
+					<h3>Board size</h3>
+					<input type="number" id="option:board-rows" placeholder="rows">
+					<input type="number" id="option:board-cols" placeholder="columns">
+				</div>
 			</div>
 		</div>
 		<div class="section" id="game-section">
 			<canvas id="canvas">Your browser doesn't support the HTML5 canvas!</canvas>
 		</div>
 		<div class="section" id="right-section">
+			<a href="https://github.com/Thatguyjs/Minesweeper" target="_blank" rel="noreferrer">View on Github</a>
 
+			<div id="timer">
+				<span id="timer-min"></span>
+				<span id="timer-sec"></span>
+			</div>
 		</div>
 
 		<script type="module" src="main.mjs"></script>

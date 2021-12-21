@@ -25,6 +25,16 @@ canvas.addEventListener('contextmenu', (ev) => {
 	return false;
 });
 
+
+window.addEventListener('game:lose', () => {
+	console.log("Game lost!");
+});
+
+window.addEventListener('game:win', () => {
+	console.log("Game won!");
+});
+
+
 window.addEventListener('resize', () => {
 	Game.resize_canvas();
 	Game.render();
