@@ -161,6 +161,9 @@ class GameBoard {
 						continue search_loop;
 
 				visited.push(search);
+
+				if(this.tile(search.y, search.x).state === TileState.Flagged)
+					this.tile(search.y, search.x).flag();
 				if(this.tile(search.y, search.x).reveal())
 					this.#tiles_visible++;
 
