@@ -139,34 +139,30 @@ class GameBoard {
 			return;
 		}
 
-		// Simple flood-fill
+		// Simple boundary-fill
 		if(tile.type === TileType.Blank && revealed) {
-			let visited = [];
 			let searching = [];
 
 			for(let r = -1; r <= 1; r++)
 				for(let c = -1; c <= 1; c++)
 					searching.push(new Coord(tile.col + c, tile.row + r));
 
-			search_loop:
 			while(searching.length) {
 				const search = searching.pop();
-
 				if(search.x < 0 || search.x >= this.#cols || search.y < 0 || search.y >= this.#rows)
 					continue;
 
-				for(let v in visited)
-					if(visited[v].x === search.x && visited[v].y === search.y)
-						continue search_loop;
+				const search_tile = this.tile(search.y, search.x);
 
-				visited.push(search);
+				if(search_tile.state === TileState.Visible)
+					continue;
 
-				if(this.tile(search.y, search.x).state === TileState.Flagged)
-					this.tile(search.y, search.x).flag();
-				if(this.tile(search.y, search.x).reveal())
+				if(search_tile.state === TileState.Flagged)
+					search_tile.flag();
+				if(search_tile.reveal())
 					this.#tiles_visible++;
 
-				if(this.tile(search.y, search.x).type === TileType.Blank) {
+				if(search_tile.type === TileType.Blank) {
 					for(let r = -1; r <= 1; r++)
 						for(let c = -1; c <= 1; c++)
 							searching.push(new Coord(search.x + c, search.y + r));

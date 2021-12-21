@@ -1,4 +1,3 @@
-import Coord from "./coord.mjs";
 import { Color, color } from "./color.mjs";
 
 
@@ -28,6 +27,7 @@ const TileState = {
 	Visible: 1,
 	Flagged: 2
 };
+
 
 class Tile {
 	constructor(row, col, type, state) {
