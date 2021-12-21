@@ -35,6 +35,18 @@ const Difficulty = {
 	}
 };
 
+const GameState = {
+	None: 0,
+	Active: 1,
+	Lose: 2,
+	Win: 3
+};
+
+const GameEvent = {
+	Lose: 1,
+	Win: 2
+};
+
 
 const Game = {
 	canvas: null,
@@ -43,6 +55,8 @@ const Game = {
 	difficulty: Difficulty.Easy,
 	board: null,
 
+	state: GameState.None,
+
 	init(canvas, context, options) {
 		this.canvas = canvas;
 		this.context = context;
@@ -50,6 +64,8 @@ const Game = {
 		this.difficulty = options?.difficulty ?? Difficulty.Easy;
 		this.board = new GameBoard(this.canvas, ...Difficulty.board_size(this.difficulty));
 		this.resize_canvas();
+
+		this.state = GameState.Active;
 	},
 
 	resize_canvas() {
@@ -65,12 +81,19 @@ const Game = {
 		if(!this.board.generated)
 			this.board.generate(mouse, Difficulty.mine_count(this.difficulty));
 
-		this.board.click(mouse, event.button, this.update_callback);
-		console.warn("TODO: Game update");
+		if(this.state === GameState.Active)
+			this.board.click(mouse, event.button, this.event_callback.bind(this));
 	},
 
-	update_callback(event) {
-
+	event_callback(event) {
+		if(event === GameEvent.Lose) {
+			console.log("player lost!");
+			this.state = GameState.Lose;
+		}
+		else {
+			console.log("player won!");
+			this.state = GameState.Win;
+		}
 	},
 
 	render() {
@@ -80,4 +103,4 @@ const Game = {
 };
 
 
-export { Game, Difficulty };
+export { Game, Difficulty, GameEvent };

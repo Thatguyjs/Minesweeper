@@ -2,6 +2,21 @@ import Coord from "./coord.mjs";
 import { Color, color } from "./color.mjs";
 
 
+function neighbor_color(neighbors) {
+	switch(neighbors) {
+		case 1:
+			return color(20, 90, 255);
+		case 2:
+			return color(0, 220, 0);
+		case 3:
+			return color(220, 0, 0);
+		case 3:
+			return color(255, 0, 255);
+		default:
+			return color(200);
+	}
+}
+
 const TileType = {
 	Blank: 0,
 	Proximity: 1,
@@ -24,7 +39,7 @@ class Tile {
 	}
 
 	reveal() {
-		if(this.state === TileState.Flagged)
+		if(this.state !== TileState.None)
 			return false;
 
 		this.state = TileState.Visible;
@@ -59,7 +74,11 @@ class Tile {
 		}
 		else if(this.state === TileState.Visible) {
 			if(this.type === TileType.Proximity) {
-
+				Color.fill(context, neighbor_color(this.value));
+				context.textAlign = "center";
+				context.textBaseline = "middle";
+				context.font = `${tile_scale / 5 + 8}px sans-serif`;
+				context.fillText(this.value.toString(), start.x + tile_scale / 2, start.y + tile_scale / 2 + 1);
 			}
 			else if(this.type === TileType.Mine) {
 				Color.fill(context, color(20));
@@ -70,4 +89,4 @@ class Tile {
 }
 
 
-export { Tile, TileType };
+export { Tile, TileType, TileState };
