@@ -133,15 +133,14 @@ class GameBoard {
 			}
 		}
 
-		if(this.#tiles_visible === this.#rows * this.#cols - this.#mine_count && this.#tiles_flagged === this.#mine_count)
-			event_callback(GameEvent.Win);
-
 		// Player clicked a mine
-		else if(tile.type === TileType.Mine && revealed)
+		if(tile.type === TileType.Mine && revealed) {
 			event_callback(GameEvent.Lose);
+			return;
+		}
 
 		// Simple flood-fill
-		else if(tile.type === TileType.Blank && revealed) {
+		if(tile.type === TileType.Blank && revealed) {
 			let visited = [];
 			let searching = [];
 
@@ -174,6 +173,10 @@ class GameBoard {
 				}
 			}
 		}
+
+		// Check for a win
+		if(this.#tiles_visible === this.#rows * this.#cols - this.#mine_count && this.#tiles_flagged === this.#mine_count)
+			event_callback(GameEvent.Win);
 	}
 
 	render(context) {
