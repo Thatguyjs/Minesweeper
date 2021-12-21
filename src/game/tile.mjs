@@ -48,14 +48,26 @@ class Tile {
 		start.add(tile_scale * this.col, tile_scale * this.row);
 
 		Color.fill(context, color(40));
+		if(this.state === TileState.Visible && this.type === TileType.Blank)
+			Color.fill(context, color(60));
+
 		context.fillRect(start.x + 2, start.y + 2, tile_scale - 4, tile_scale - 4);
 
 		if(this.state === TileState.Flagged) {
 			Color.fill(context, color(200, 20, 50));
 			context.fillRect(start.x + tile_scale / 4, start.y + tile_scale / 4, tile_scale / 2, tile_scale / 2);
 		}
+		else if(this.state === TileState.Visible) {
+			if(this.type === TileType.Proximity) {
+
+			}
+			else if(this.type === TileType.Mine) {
+				Color.fill(context, color(20));
+				context.fillRect(start.x + tile_scale / 4, start.y + tile_scale / 4, tile_scale / 2, tile_scale / 2);
+			}
+		}
 	}
 }
 
 
-export default Tile;
+export { Tile, TileType };

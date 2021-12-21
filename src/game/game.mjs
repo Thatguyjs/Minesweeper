@@ -19,6 +19,19 @@ const Difficulty = {
 			default:
 				return null;
 		}
+	},
+
+	mine_count(difficulty) {
+		switch(difficulty) {
+			case Difficulty.Easy:
+				return 10;
+			case Difficulty.Medium:
+				return 40;
+			case Difficulty.Hard:
+				return 99;
+			default:
+				return null;
+		}
 	}
 };
 
@@ -50,7 +63,7 @@ const Game = {
 		if(!this.board.has_coord(mouse)) return;
 
 		if(!this.board.generated)
-			this.board.generate(mouse);
+			this.board.generate(mouse, Difficulty.mine_count(this.difficulty));
 
 		this.board.click(mouse, event.button, this.update_callback);
 		console.warn("TODO: Game update");

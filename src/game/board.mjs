@@ -1,6 +1,6 @@
 import Coord from "./coord.mjs";
 import { Color, color } from "./color.mjs";
-import Tile from "./tile.mjs";
+import { Tile, TileType } from "./tile.mjs";
 
 
 class GameBoard {
@@ -34,14 +34,60 @@ class GameBoard {
 		this.#board_size = this.#tile_scale * this.#rows;
 	}
 
+	mouse_to_tile(mouse) {
+		const board_start = this.#center.copy().sub(this.#board_size / 2);
+		const tile_coord = mouse.copy().sub(board_start).div(this.#tile_scale).floor();
+
+		return {
+			row: tile_coord.y,
+			col: tile_coord.x
+		};
+	}
+
 	has_coord(coord) {
 		const min = this.#center.copy().sub(this.#board_size / 2);
 		const max = this.#center.copy().add(this.#board_size / 2);
 		return coord.x > min.x && coord.x < max.x && coord.y > min.y && coord.y < max.y;
 	}
 
-	generate(mouse) {
+	generate(mouse, mine_count) {
 		if(this.#generated) return;
+		if(mine_count >= this.#rows * this.#cols) return;
+
+		const mouse_tile = this.mouse_to_tile(mouse);
+		let mine_inds = [];
+
+		while(mine_inds.length < mine_count) {
+			const index = Math.floor(Math.random() * this.#rows * this.#cols);
+
+			if(mine_inds.includes(index)) continue;
+			if(this.#tiles[index].row === mouse_tile.row && this.#tiles[index].col === mouse_tile.col)
+				continue;
+
+			this.#tiles[index].type = TileType.Mine;
+			mine_inds.push(index);
+		}
+
+		for(let r = 0; r < this.#rows; r++) {
+			for(let c = 0; c < this.#cols; c++) {
+				if(this.tile(r, c).type === TileType.Mine) continue;
+
+				let neighbors = 0;
+
+				for(let ro = -1; ro <= 1; ro++) {
+					for(let co = -1; co <= 1; co++) {
+						if(this.safe_tile(r + ro, c + co).type === TileType.Mine)
+							neighbors++;
+					}
+				}
+
+				if(neighbors > 0) {
+					this.tile(r, c).type = TileType.Proximity;
+					this.tile(r, c).value = neighbors;
+				}
+			}
+		}
+
 		this.#generated = true;
 	}
 
@@ -58,11 +104,17 @@ class GameBoard {
 		return this.#tiles[col + row * this.#cols];
 	}
 
-	click(mouse, button, callback) {
-		const board_start = this.#center.copy().sub(this.#board_size / 2);
-		const tile_coord = mouse.copy().sub(board_start).div(this.#tile_scale).floor();
+	// Generates a dummy tile if `row` or `col` are out-of-bounds
+	safe_tile(row, col) {
+		if(row < 0 || row >= this.#rows || col < 0 || col >= this.#cols)
+			return new Tile(row, col);
 
-		const tile = this.tile(tile_coord.y, tile_coord.x);
+		return this.#tiles[col + row * this.#cols];
+	}
+
+	click(mouse, button, callback) {
+		const tile_coord = this.mouse_to_tile(mouse);
+		const tile = this.tile(tile_coord.row, tile_coord.col);
 
 		if(button === 0)
 			tile.reveal();
