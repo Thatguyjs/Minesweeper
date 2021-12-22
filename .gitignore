@@ -1,0 +1,3 @@
+# Unused font files
+/src/fonts/Ubuntu/*
+!/src/fonts/Ubuntu/Ubuntu-Light.ttf
