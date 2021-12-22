@@ -46,11 +46,13 @@ class Tile {
 		return true;
 	}
 
-	flag() {
+	flag(set_flag) {
 		if(this.state === TileState.Visible)
 			return false;
 
-		if(this.state === TileState.None)
+		if(set_flag !== undefined)
+			this.state = set_flag ? TileState.Flagged : TileState.None;
+		else if(this.state === TileState.None)
 			this.state = TileState.Flagged;
 		else
 			this.state = TileState.None;

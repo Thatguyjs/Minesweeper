@@ -19,9 +19,11 @@ class GameBoard {
 	#tiles_visible = 0;
 	#tiles_flagged = 0;
 
-	constructor(canvas, rows, cols) {
+	constructor(canvas, rows, cols, mine_count) {
 		this.#rows = rows;
 		this.#cols = cols;
+		this.#mine_count = mine_count;
+
 		this.resize(canvas);
 
 		for(let i = 0; i < this.#rows * this.#cols; i++) {
@@ -56,16 +58,14 @@ class GameBoard {
 		return coord.x > min.x && coord.x < max.x && coord.y > min.y && coord.y < max.y;
 	}
 
-	generate(mouse, mine_count) {
+	generate(mouse) {
 		if(this.#generated) return;
-		if(mine_count >= this.#rows * this.#cols) return;
-
-		this.#mine_count = mine_count;
+		if(this.#mine_count >= this.#rows * this.#cols) return;
 
 		const mouse_tile = this.mouse_to_tile(mouse);
 		let mine_inds = [];
 
-		while(mine_inds.length < mine_count) {
+		while(mine_inds.length < this.#mine_count) {
 			const index = Math.floor(Math.random() * this.#rows * this.#cols);
 
 			if(mine_inds.includes(index)) continue;
@@ -175,6 +175,15 @@ class GameBoard {
 		// Check for a win
 		if(this.#tiles_visible === this.#rows * this.#cols - this.#mine_count && this.#tiles_flagged === this.#mine_count)
 			event_callback(GameEvent.Win);
+	}
+
+	reveal_mines() {
+		for(let t in this.#tiles) {
+			if(this.#tiles[t].type === TileType.Mine) {
+				this.#tiles[t].flag(false);
+				this.#tiles[t].reveal();
+			}
+		}
 	}
 
 	render(context) {

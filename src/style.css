@@ -83,6 +83,23 @@ header span {
 	font-size: 17px;
 }
 
+#options span {
+	margin-top: 6px;
+}
+
+
+#start-container {
+	display: flex;
+	justify-content: center;
+
+	margin-top: 8px;
+}
+
+#start {
+	width: 112px;
+	height: 32px;
+}
+
 
 #game-section {
 	flex: 3;

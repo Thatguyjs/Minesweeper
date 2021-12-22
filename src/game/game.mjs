@@ -16,6 +16,8 @@ const Difficulty = {
 				return [16, 16];
 			case Difficulty.Hard:
 				return [16, 30];
+			case Difficulty.Custom:
+				return [null, null];
 			default:
 				return null;
 		}
@@ -64,11 +66,14 @@ const Game = {
 	},
 
 	reset(options) {
-		this.difficulty = options?.difficulty ?? Difficulty.Medium;
-		this.board = new GameBoard(this.canvas, ...Difficulty.board_size(this.difficulty));
-		this.resize_canvas();
+		this.difficulty = options?.difficulty ?? Difficulty.Easy;
 
-		this.state = GameState.Active;
+		if(this.difficulty !== Difficulty.Custom)
+			this.board = new GameBoard(this.canvas, ...Difficulty.board_size(this.difficulty), Difficulty.mine_count(this.difficulty));
+		else
+			this.board = new GameBoard(this.canvas, options.rows, options.cols, options.mine_count);
+
+		this.resize_canvas();
 	},
 
 	resize_canvas() {
@@ -81,8 +86,11 @@ const Game = {
 		const mouse = new Coord(event.offsetX, event.offsetY);
 		if(!this.board.has_coord(mouse)) return;
 
-		if(!this.board.generated)
-			this.board.generate(mouse, Difficulty.mine_count(this.difficulty));
+		if(!this.board.generated) {
+			this.board.generate(mouse);
+			this.state = GameState.Active;
+			this.dispatch('start');
+		}
 
 		if(this.state === GameState.Active)
 			this.board.click(mouse, event.button, this.event_callback.bind(this));
@@ -90,12 +98,14 @@ const Game = {
 
 	event_callback(event) {
 		if(event === GameEvent.Lose) {
-			this.dispatch('lose');
 			this.state = GameState.Lose;
+			this.dispatch('lose');
+			this.board.reveal_mines();
 		}
 		else {
-			this.dispatch('win');
 			this.state = GameState.Win;
+			this.dispatch('win');
+			this.board.reveal_mines();
 		}
 	},
 

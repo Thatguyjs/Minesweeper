@@ -18,23 +18,29 @@
 
 				<div>
 					<h3>Difficulty</h3>
-					<select id="option:difficulty">
+					<select id="option:difficulty" class="option">
 						<option value="easy">Easy</option>
 						<option value="medium">Medium</option>
 						<option value="hard">Hard</option>
+						<option value="custom">Custom</option>
 					</select>
 					<span>
-						<span id="display:difficulty-rows">0</span> rows,
-						<span id="display:difficulty-cols">0</span> columns,
-						<span id="display:difficulty-mines">0</span> mines
+						<span id="display:rows" class="display">0</span> rows,
+						<span id="display:cols" class="display">0</span> columns,
+						<span id="display:mines" class="display">0</span> mines
 					</span>
 				</div>
 
 				<div>
-					<h3>Board size</h3>
-					<input type="number" id="option:board-rows" placeholder="rows">
-					<input type="number" id="option:board-cols" placeholder="columns">
+					<h3>Custom board</h3>
+					<input type="number" id="option:board-rows" class="option" placeholder="rows">
+					<input type="number" id="option:board-cols" class="option" placeholder="columns">
+					<input type="number" id="option:board-mines" class="option" placeholder="mines">
 				</div>
+			</div>
+
+			<div id="start-container">
+				<button id="start">Play</button>
 			</div>
 		</div>
 		<div class="section" id="game-section">
@@ -44,8 +50,8 @@
 			<a href="https://github.com/Thatguyjs/Minesweeper" target="_blank" rel="noreferrer">View on Github</a>
 
 			<div id="timer">
-				<span id="timer-min"></span>
-				<span id="timer-sec"></span>
+				<span id="timer:min"></span>
+				<span id="timer:sec"></span>
 			</div>
 		</div>
 
