@@ -16,6 +16,11 @@ body {
 	background: #181a1e;
 }
 
+button {
+	cursor: pointer;
+}
+
+
 .section:not(#game-section) {
 	flex: 1;
 	background: #15161b;
@@ -96,8 +101,16 @@ header span {
 }
 
 #start {
-	width: 112px;
-	height: 32px;
+	width: 120px;
+	height: 35px;
+
+	color: #eee;
+	font-family: "Ubuntu";
+	font-size: 15px;
+
+	background: #184017;
+	border: 2px solid #083007;
+	border-radius: 3px;
 }
 
 

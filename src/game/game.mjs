@@ -105,7 +105,6 @@ const Game = {
 		else {
 			this.state = GameState.Win;
 			this.dispatch('win');
-			this.board.reveal_mines();
 		}
 	},
 

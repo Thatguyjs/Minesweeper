@@ -1,4 +1,5 @@
 import Options from "./options.mjs";
+import Timer from "./timer.mjs";
 import { Game } from "./game/game.mjs";
 
 function el(selector) {
@@ -8,6 +9,8 @@ function el(selector) {
 
 const canvas = el('#canvas');
 const ctx = canvas.getContext('2d');
+
+const timer = new Timer(el('#timer'));
 
 Game.init(canvas, ctx);
 Options.init();
@@ -32,14 +35,17 @@ canvas.addEventListener('contextmenu', (ev) => {
 
 window.addEventListener('game:start', () => {
 	console.log("Game started!");
+	timer.start();
 });
 
 window.addEventListener('game:lose', () => {
 	console.log("Game lost!");
+	timer.stop();
 });
 
 window.addEventListener('game:win', () => {
 	console.log("Game won!");
+	timer.stop();
 });
 
 
