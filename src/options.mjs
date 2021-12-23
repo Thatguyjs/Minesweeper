@@ -1,4 +1,4 @@
-import { Game, Difficulty } from "./game/game.mjs";
+import { Game, GameState, Difficulty } from "./game/game.mjs";
 
 
 const Options = {
@@ -98,6 +98,8 @@ const Options = {
 				return Difficulty.board_size(this.state_value('difficulty'))[1] ?? this.state_value('board-cols');
 			case 'mines':
 				return Difficulty.mine_count(this.state_value('difficulty')) ?? this.state_value('board-mines');
+			case 'result':
+				return Game.state === GameState.Win ? 'You Win!' : Game.state === GameState.Lose ? 'You Lose!' : '';
 		}
 	},
 

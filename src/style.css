@@ -127,3 +127,40 @@ canvas {
 #right-section {
 	/* TODO */
 }
+
+#github {
+	display: flex;
+	justify-content: right;
+}
+
+#github a {
+	display: block;
+	margin: 12px;
+
+	color: #55a5ff;
+	text-decoration: none;
+}
+
+#timer {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	height: 35px;
+
+	color: #ccc;
+	font-size: 22px;
+	font-family: "Ubuntu";
+}
+
+#game-result {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	margin-top: 18px;
+	height: 28px;
+
+	color: #eee;
+	font-size: 18px;
+}

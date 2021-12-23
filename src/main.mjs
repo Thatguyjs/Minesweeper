@@ -11,6 +11,7 @@ const canvas = el('#canvas');
 const ctx = canvas.getContext('2d');
 
 const timer = new Timer(el('#timer'));
+timer.reset();
 
 Game.init(canvas, ctx);
 Options.init();
@@ -22,6 +23,9 @@ Game.render();
 canvas.addEventListener('click', (ev) => {
 	Game.update(ev);
 	Game.render();
+
+	ev.preventDefault();
+	return false;
 });
 
 canvas.addEventListener('contextmenu', (ev) => {
@@ -34,23 +38,25 @@ canvas.addEventListener('contextmenu', (ev) => {
 
 
 window.addEventListener('game:start', () => {
-	console.log("Game started!");
 	timer.start();
 });
 
 window.addEventListener('game:lose', () => {
-	console.log("Game lost!");
 	timer.stop();
+	Options.update();
 });
 
 window.addEventListener('game:win', () => {
-	console.log("Game won!");
 	timer.stop();
+	Options.update();
 });
 
 
 el('#start').addEventListener('click', () => {
 	Options.load_state();
+	Options.update();
+
+	timer.reset();
 	Game.render();
 });
 

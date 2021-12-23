@@ -66,6 +66,7 @@ const Game = {
 	},
 
 	reset(options) {
+		this.state = GameState.None;
 		this.difficulty = options?.difficulty ?? Difficulty.Easy;
 
 		if(this.difficulty !== Difficulty.Custom)
@@ -121,4 +122,4 @@ const Game = {
 };
 
 
-export { Game, Difficulty, GameEvent };
+export { Game, Difficulty, GameEvent, GameState };
