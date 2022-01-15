@@ -124,7 +124,39 @@ class GameBoard {
 		let revealed = false;
 
 		if(button === 0) {
-			if(revealed = tile.reveal()) this.#tiles_visible++;
+			if(tile.state === TileState.Visible) {
+				let f_neighbors = 0;
+
+				for(let r = -1; r <= 1; r++)
+					for(let c = -1; c <= 1; c++)
+						if(this.safe_tile(tile_coord.row + r, tile_coord.col + c).state === TileState.Flagged)
+							f_neighbors++;
+
+				// Reveal surrounding tiles
+				if(tile.value === f_neighbors) {
+					for(let r = -1; r <= 1; r++) {
+						for(let c = -1; c <= 1; c++) {
+							if(tile_coord.row + r < 0 || tile_coord.row + r >= this.#rows) continue;
+							if(tile_coord.col + c < 0 || tile_coord.col + c >= this.#cols) continue;
+
+							const neighbor = this.safe_tile(tile_coord.row + r, tile_coord.col + c);
+
+							if(neighbor.reveal()) {
+								this.#tiles_visible++;
+
+								if(neighbor.type === TileType.Blank)
+									this.#reveal_area(neighbor);
+
+								if(neighbor.type === TileType.Mine) {
+									event_callback(GameEvent.Lose);
+									return;
+								}
+							}
+						}
+					}
+				}
+			}
+			else if(revealed = tile.reveal()) this.#tiles_visible++;
 		}
 		else if(button === 2) {
 			if(tile.flag()) {
@@ -141,40 +173,50 @@ class GameBoard {
 
 		// Simple boundary-fill
 		if(tile.type === TileType.Blank && revealed) {
-			let searching = [];
-
-			for(let r = -1; r <= 1; r++)
-				for(let c = -1; c <= 1; c++)
-					searching.push(new Coord(tile.col + c, tile.row + r));
-
-			while(searching.length) {
-				const search = searching.pop();
-				if(search.x < 0 || search.x >= this.#cols || search.y < 0 || search.y >= this.#rows)
-					continue;
-
-				const search_tile = this.tile(search.y, search.x);
-
-				if(search_tile.state === TileState.Visible)
-					continue;
-
-				if(search_tile.state === TileState.Flagged) {
-					search_tile.flag();
-					this.#tiles_flagged--;
-				}
-				if(search_tile.reveal())
-					this.#tiles_visible++;
-
-				if(search_tile.type === TileType.Blank) {
-					for(let r = -1; r <= 1; r++)
-						for(let c = -1; c <= 1; c++)
-							searching.push(new Coord(search.x + c, search.y + r));
-				}
-			}
+			this.#reveal_area(tile);
 		}
 
 		// Check for a win
 		if(this.#tiles_visible === this.#rows * this.#cols - this.#mine_count && this.#tiles_flagged === this.#mine_count)
 			event_callback(GameEvent.Win);
+	}
+
+	#reveal_area(start_coord) {
+		if(start_coord.row < 0 || start_coord.row >= this.#rows) return;
+		if(start_coord.col < 0 || start_coord.col >= this.#cols) return;
+
+		const tile = this.tile(start_coord.row, start_coord.col);
+		if(tile.type !== TileType.Blank) return;
+
+		let searching = [];
+
+		for(let r = -1; r <= 1; r++)
+			for(let c = -1; c <= 1; c++)
+				searching.push(new Coord(tile.col + c, tile.row + r));
+
+		while(searching.length) {
+			const search = searching.pop();
+			if(search.x < 0 || search.x >= this.#cols || search.y < 0 || search.y >= this.#rows)
+				continue;
+
+			const search_tile = this.tile(search.y, search.x);
+
+			if(search_tile.state === TileState.Visible)
+				continue;
+
+			if(search_tile.state === TileState.Flagged) {
+				search_tile.flag();
+				this.#tiles_flagged--;
+			}
+			if(search_tile.reveal())
+				this.#tiles_visible++;
+
+			if(search_tile.type === TileType.Blank) {
+				for(let r = -1; r <= 1; r++)
+					for(let c = -1; c <= 1; c++)
+						searching.push(new Coord(search.x + c, search.y + r));
+			}
+		}
 	}
 
 	reveal_mines() {

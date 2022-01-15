@@ -68,7 +68,7 @@ class Tile {
 		if(this.state === TileState.Visible && this.type === TileType.Blank)
 			Color.fill(context, color(60));
 
-		context.fillRect(start.x + 2, start.y + 2, tile_scale - 4, tile_scale - 4);
+		context.fillRect(start.x + 1, start.y + 1, tile_scale - 2, tile_scale - 2);
 
 		if(this.state === TileState.Flagged) {
 			Color.fill(context, color(200, 20, 50));
@@ -79,8 +79,8 @@ class Tile {
 				Color.fill(context, neighbor_color(this.value));
 				context.textAlign = "center";
 				context.textBaseline = "middle";
-				context.font = `${tile_scale / 5 + 8}px sans-serif`;
-				context.fillText(this.value.toString(), start.x + tile_scale / 2, start.y + tile_scale / 2 + 1);
+				context.font = `${tile_scale / 4 + 10}px sans-serif`;
+				context.fillText(this.value.toString(), start.x + tile_scale / 2, start.y + tile_scale / 2 + 2);
 			}
 			else if(this.type === TileType.Mine) {
 				Color.fill(context, color(20));
